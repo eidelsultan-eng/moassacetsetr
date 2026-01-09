@@ -1555,9 +1555,22 @@ h3,
     }
 
     .stats-container {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        padding: 0 15px;
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 20px;
+    }
+
+    .stat-item {
+        padding: 30px 20px;
+    }
+
+    .stat-number {
+        font-size: 3rem;
+        /* Slightly larger since it's full width now */
+    }
+
+    .stat-label {
+        font-size: 1.1rem;
     }
 
     /* About Section Mobile Fixes */
