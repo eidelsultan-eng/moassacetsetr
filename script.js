@@ -13,11 +13,35 @@ const mobileMenu = document.getElementById('mobile-menu');
 const navLinksContainer = document.querySelector('.nav-links');
 
 if (mobileMenu) {
-    mobileMenu.addEventListener('click', () => {
+    mobileMenu.addEventListener('click', (e) => {
+        e.stopPropagation();
         navLinksContainer.classList.toggle('active');
         const icon = mobileMenu.querySelector('i');
         icon.classList.toggle('fa-bars');
         icon.classList.toggle('fa-times');
+    });
+
+    // Close menu when clicking on a link
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinksContainer.classList.remove('active');
+            const icon = mobileMenu.querySelector('i');
+            icon.classList.add('fa-bars');
+            icon.classList.remove('fa-times');
+        });
+    });
+
+    // Close menu when clicking anywhere else on the screen
+    document.addEventListener('click', (e) => {
+        if (!navLinksContainer.contains(e.target) && !mobileMenu.contains(e.target)) {
+            if (navLinksContainer.classList.contains('active')) {
+                navLinksContainer.classList.remove('active');
+                const icon = mobileMenu.querySelector('i');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-times');
+            }
+        }
     });
 }
 
