@@ -43,6 +43,7 @@
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 body {
@@ -51,6 +52,7 @@ body {
     color: var(--text-main);
     line-height: 1.7;
     overflow-x: hidden;
+    width: 100%;
     /* Custom Mesh Gradient Background */
     background: radial-gradient(circle at 0% 0%, rgba(6, 78, 75, 0.4) 0%, transparent 40%),
         radial-gradient(circle at 100% 100%, rgba(212, 175, 55, 0.1) 0%, transparent 40%),
@@ -465,23 +467,22 @@ h3,
 }
 
 .about-text .sub-title {
-    background: rgba(128, 26, 36, 0.1);
-    /* Burgundy tint */
-    color: var(--burgundy);
+    background: var(--accent-glow);
+    color: var(--accent);
     padding: 8px 25px;
     border-radius: 100px;
     font-size: 0.9rem;
     font-weight: 700;
     margin-bottom: 25px;
     display: inline-block;
-    border: 1px solid rgba(128, 26, 36, 0.1);
+    border: 1px solid var(--accent-glow);
 }
 
 .shadow-premium {
     position: relative;
     border-radius: var(--border-radius);
     overflow: hidden;
-    box-shadow: 0 40px 80px rgba(128, 26, 36, 0.25);
+    box-shadow: 0 40px 80px rgba(212, 175, 55, 0.15);
     border: 1px solid var(--glass-border);
 }
 
@@ -489,7 +490,7 @@ h3,
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(45deg, rgba(128, 26, 36, 0.1), transparent);
+    background: linear-gradient(45deg, var(--accent-glow), transparent);
     z-index: 1;
 }
 
@@ -501,27 +502,43 @@ h3,
 
 .features-list {
     margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
 }
 
 .features-list li {
     display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
     gap: 15px;
-    margin-bottom: 20px;
-    font-size: 1.2rem;
-    color: var(--text-main);
 }
 
 .features-list i {
     color: var(--accent);
-    background: rgba(212, 175, 55, 0.1);
-    width: 35px;
-    height: 35px;
+    background: var(--accent-glow);
+    width: 50px;
+    height: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    font-size: 0.9rem;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.features-list strong {
+    font-size: 1.3rem;
+    color: var(--accent);
+    margin-bottom: 5px;
+}
+
+.features-list p {
+    font-size: 1rem;
+    color: var(--text-main);
+    max-width: 600px;
+    line-height: 1.6;
 }
 
 /* Services - Unique Cards */
@@ -1439,16 +1456,19 @@ h3,
         justify-content: center;
     }
 
-    /* Navbar & Mobile Menu Improvements */
+    /* Floating Navbar for Mobile */
     .navbar {
-        top: 0;
-        width: 100%;
-        border-radius: 0;
-        border: none;
-        padding: 5px 15px;
-        background: rgba(4, 38, 36, 0.98);
-        border-bottom: 1px solid var(--glass-border);
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 92%;
+        border-radius: 50px;
+        padding: 8px 15px;
+        background: rgba(4, 38, 36, 0.95);
+        backdrop-filter: blur(25px);
         justify-content: space-between;
+        z-index: 2000;
+        border: 1px solid var(--glass-border);
     }
 
     .nav-logo {
@@ -1456,35 +1476,130 @@ h3,
     }
 
     .logo-text {
-        font-size: 0.95rem !important;
+        font-size: 1rem !important;
+        margin-right: 5px;
     }
 
-    .hero {
-        padding: 90px 0 50px;
+    .nav-cta {
+        display: block;
     }
 
-    .hero h1 {
-        font-size: 1.8rem;
+    .nav-cta .btn {
+        padding: 5px 12px;
+        font-size: 0.8rem;
+        border-radius: 40px;
     }
 
-    .hero p {
-        font-size: 0.9rem;
+    .menu-toggle {
+        display: block !important;
+        font-size: 1.2rem;
+        color: var(--white);
+        cursor: pointer;
+        padding: 5px;
     }
 
     .nav-links {
         position: fixed;
-        top: 50px;
+        top: 65px;
         right: -100%;
         width: 80%;
-        height: calc(100vh - 50px);
-        background: rgba(2, 26, 24, 0.98);
+        height: auto;
+        max-height: 80vh;
+        background: rgba(4, 38, 36, 0.98);
+        backdrop-filter: blur(20px);
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        gap: 25px;
+        padding: 40px 0;
+        gap: 20px;
         transition: var(--transition-smooth);
         z-index: 1001;
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+        border-radius: 30px;
+        box-shadow: var(--shadow-lg);
+        overflow-y: auto;
+    }
+
+    .nav-links.active {
+        right: 10px;
+        /* Slide in slightly from the edge */
+    }
+
+    /* Hero Section Mobile Fixes */
+    .hero {
+        padding: 120px 0 60px;
+        min-height: auto;
+        height: auto;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+        line-height: 1.2;
+        margin-bottom: 20px;
+    }
+
+    .hero p {
+        font-size: 1rem;
+        margin-bottom: 30px;
+        padding: 0 15px;
+    }
+
+    .hero::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    /* About Section Mobile Fixes */
+    .about {
+        padding: 60px 0;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+        text-align: center;
+    }
+
+    .about-image {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    .about::before {
+        display: none;
+    }
+
+    /* Redesign Services for Mobile (Centered, Large Icons) */
+    .services-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0 10px;
+    }
+
+    .service-card {
+        text-align: center;
+        padding: 40px 20px;
+        background: rgba(6, 78, 75, 0.4);
+        border: 1px solid var(--glass-border);
+        border-radius: 25px;
+    }
+
+    .service-icon {
+        font-size: 4.5rem;
+        /* Large icons like screenshot */
+        color: var(--white);
+        margin-bottom: 25px;
+        filter: none;
+    }
+
+    .service-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+        color: var(--white);
+    }
+
+    .service-card p {
+        font-size: 1rem;
+        color: var(--text-muted);
+        line-height: 1.6;
     }
 }
 
