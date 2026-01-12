@@ -121,6 +121,7 @@ if (form) {
             case 'volunteer': typeText = 'تطوع بجهد'; break;
             case 'donor': typeText = 'تبرع مادي/عيني'; break;
             case 'help': typeText = 'طلب مساعدة (حالة إنسانية)'; break;
+            case 'inquiry': typeText = 'شكاوى واستفسارات'; break;
             default: typeText = 'استفسار عام';
         }
 
@@ -137,7 +138,7 @@ if (form) {
             formStatus.style.display = 'block';
 
             setTimeout(() => {
-                window.open(`https://wa.me/201000700490?text=${whatsappMessage}`, '_blank');
+                window.open(`https://wa.me/201002200841?text=${whatsappMessage}`, '_blank');
                 form.reset();
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
