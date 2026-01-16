@@ -138,7 +138,7 @@ if (form) {
             formStatus.style.display = 'block';
 
             setTimeout(() => {
-                window.open(`https://wa.me/201002200841?text=${whatsappMessage}`, '_blank');
+                window.open(`https://wa.me/201065037070?text=${whatsappMessage}`, '_blank');
                 form.reset();
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
@@ -201,3 +201,120 @@ window.addEventListener('load', () => {
         }
     });
 });
+// Case Research Form Logic
+const caseForm = document.getElementById('caseResearchForm');
+const addFamilyRowBtn = document.getElementById('addFamilyRow');
+const familyTableBody = document.querySelector('#familyTable tbody');
+const burdenInputs = document.querySelectorAll('.burden-calc');
+const burdenTotalDisplay = document.getElementById('burdenTotal');
+
+if (addFamilyRowBtn && familyTableBody) {
+    addFamilyRowBtn.addEventListener('click', () => {
+        const rowCount = familyTableBody.rows.length + 1;
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${rowCount}</td>
+            <td><input type="text" name="f_name[]"></td>
+            <td><input type="number" name="f_age[]"></td>
+            <td><input type="text" name="f_edu[]"></td>
+            <td><input type="text" name="f_job[]"></td>
+            <td><input type="text" name="f_health[]"></td>
+            <td><input type="number" name="f_income[]"></td>
+            <td><input type="text" name="f_source[]"></td>
+        `;
+        familyTableBody.appendChild(newRow);
+    });
+}
+
+// Burden Calculation
+if (burdenInputs.length > 0) {
+    burdenInputs.forEach(input => {
+        input.addEventListener('input', () => {
+            let total = 0;
+            burdenInputs.forEach(inp => {
+                total += parseFloat(inp.value) || 0;
+            });
+            burdenTotalDisplay.value = total;
+        });
+    });
+}
+
+if (caseForm) {
+    caseForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const submitBtn = caseForm.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري حفظ التقرير...';
+
+        const formData = new FormData(caseForm);
+        const data = {};
+        formData.forEach((value, key) => {
+            if (key.endsWith('[]')) {
+                const cleanKey = key.slice(0, -2);
+                if (!data[cleanKey]) data[cleanKey] = [];
+                data[cleanKey].push(value);
+            } else {
+                data[key] = value;
+            }
+        });
+
+        // Format Family Members
+        let familyDetails = "";
+        if (data.f_name && data.f_name.length > 0) {
+            familyDetails = "*👨‍👩‍👧‍👦 بيانات أفراد الأسرة:*%0A";
+            data.f_name.forEach((name, index) => {
+                if (name && name.trim() !== "") {
+                    familyDetails += `${index + 1}- ${name} (السن: ${data.f_age[index] || '-'}, المهنة: ${data.f_job[index] || '-'}, الدخل: ${data.f_income[index] || '0'})%0A`;
+                }
+            });
+        }
+
+        // Prepare structured WhatsApp message
+        const summary =
+            `*📋 تقرير بحث حالة جديد - مؤسسة ستر*%0A%0A` +
+            `*ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــ*%0A` +
+            `*👤 بيانات الحالة الأساسية:*%0A` +
+            `• *الاسم:* ${data.case_name}%0A` +
+            `• *الرقم القومي:* ${data.case_national_id}%0A` +
+            `• *العنوان:* ${data.address}%0A` +
+            `• *رقم المحمول:* ${data.mobile}%0A` +
+            `• *نوع الاحتياج:* ${data.case_need}%0A` +
+            `• *الدخل الثابت:* ${data.fixed_income} ج.م%0A%0A` +
+            `${familyDetails}%0A` +
+            `*💰 الأعباء الشهرية:*%0A` +
+            `• إيجار: ${data.burden_rent || 0} | كهرباء: ${data.burden_elec || 0}%0A` +
+            `• مياه: ${data.burden_water || 0} | علاج: ${data.burden_med || 0}%0A` +
+            `• ديون: ${data.burden_debts || 0}%0A` +
+            `• *الإجمالي:* ${burdenTotalDisplay.value} ج.م%0A%0A` +
+            `*📝 تفاصيل الحالة:*%0A` +
+            `${data.case_details || 'لا يوجد'}%0A%0A` +
+            `*🔍 رأي الباحث:*%0A` +
+            `${data.researcher_opinion || 'لا يوجد'}%0A%0A` +
+            `*🗓 تاريخ الزيارة:* ${data.visit_date}%0A` +
+            `*ـــــــــــــــــــــــــــــــــــــــــــــــــــــــــ*%0A` +
+            `_تم الإرسال عبر منظومة بحث الحالات الميدانية_`;
+
+        setTimeout(() => {
+            alert('تم تجهيز التقرير بنجاح! سيتم فتحه الآن في واتساب للإرسال.');
+            window.open(`https://wa.me/201065037070?text=${summary}`, '_blank');
+            caseForm.reset();
+            familyTableBody.innerHTML = `
+                <tr>
+                    <td>1</td>
+                    <td><input type="text" name="f_name[]"></td>
+                    <td><input type="number" name="f_age[]"></td>
+                    <td><input type="text" name="f_edu[]"></td>
+                    <td><input type="text" name="f_job[]"></td>
+                    <td><input type="text" name="f_health[]"></td>
+                    <td><input type="number" name="f_income[]"></td>
+                    <td><input type="text" name="f_source[]"></td>
+                </tr>
+            `;
+            burdenTotalDisplay.value = '';
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }, 1500);
+    });
+}
